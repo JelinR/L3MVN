@@ -1,2 +1,6 @@
 detectron2/
 habitat-lab
+RedNet/model/
+data/scene_datasets
+data/objectgoal_PersONAL
+data/scene_datasets
