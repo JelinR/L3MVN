@@ -69,7 +69,7 @@ def get_args():
                         help='Frame height (default:120)')
     parser.add_argument('-el', '--max_episode_length', type=int, default=500,
                         help="""Maximum episode length""")
-    parser.add_argument("--task_config", type=str,
+    parser.add_argument("--task_config", type=str,                                          #IMP : Task Configuration File
                         default="tasks/objectnav_hm3d.yaml",
                         help="path to config yaml containing task information")
     parser.add_argument("--split", type=str, default="train",

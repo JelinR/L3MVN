@@ -147,7 +147,7 @@ def main():
 
     # Starting environments
     torch.set_num_threads(1)
-    envs = make_vec_envs(args)
+    envs = make_vec_envs(args)          #IMP : Vectorized Environments
     obs, infos = envs.reset()
 
     torch.set_grad_enabled(False)
