@@ -5,7 +5,8 @@ import numpy as np
 import torch
 from habitat.config.default import get_config as cfg_env
 from habitat.datasets.pointnav.pointnav_dataset import PointNavDatasetV1
-from habitat import Config, Env, RLEnv, VectorEnv, make_dataset
+# from habitat import Config, Env, RLEnv, VectorEnv, make_dataset
+from habitat import VectorEnv, make_dataset             #IMP : Changed
 
 from agents.sem_exp import Sem_Exp_Env_Agent
 from .objectgoal_env import ObjectGoal_Env

@@ -4,7 +4,7 @@ scikit-learn
 scikit-image
 numpy
 ifcfg
-transformers
+transformers<=4.28
 tensorboard
 
 ## OG Requirements
