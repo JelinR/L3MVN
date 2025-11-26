@@ -12,14 +12,16 @@
             "program": "${workspaceFolder}/main_llm_vis.py",
             "python": "/mnt/anaconda3/envs/personal_l3mvn_og/bin/python",
             // "cwd": "/mnt/L3MVN/",
-            "args": ["--split", "val",
-                    // "--eval", "1",
-                    // "-auto_gpu_config", "0",
-                    // "-n", "1",
-                    // // "--num_eval_episodes", "2000",
-                    // "--load", "pretrained_models/llm_model.pt",
-                    // "--use_gtsem", "0",
-                    // "--num_local_steps", "10"
+            "args": [
+                    "--task_config", "tasks/objectnav_personal.yaml",
+                    "--split", "val",
+                    "--eval", "1",
+                    "--auto_gpu_config", "0",
+                    "-n", "1",
+                    // "--num_eval_episodes", "2000",
+                    "--load", "pretrained_models/llm_model.pt",
+                    "--use_gtsem", "0",
+                    "--num_local_steps", "10"
                 ]
         },
     ]

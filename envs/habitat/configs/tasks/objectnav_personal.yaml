@@ -43,8 +43,8 @@ TASK:
 DATASET:
   TYPE: Personalized-ObjectNav-v1
   SPLIT: val
-  DATA_PATH: "data/objectgoal_PersONAL/{split}/easy.json.gz"
-  # DATA_PATH: "data/objectgoal_PersONAL/{split}/test_baselines/medium_filt.json.gz"
-  # DATA_PATH: "data/objectgoal_PersONAL/{split}/test_baselines/hard_filt.json.gz"
+  DATA_PATH: "data/objectgoal_PersONAL/{split}/easy/easy.json.gz"
+  # DATA_PATH: "data/objectgoal_PersONAL/{split}/test_baselines/medium_filt/medium.json.gz"
+  # DATA_PATH: "data/objectgoal_PersONAL/{split}/test_baselines/hard_filt/hard.json.gz"
   SCENES_DIR: "data/scene_datasets"
 

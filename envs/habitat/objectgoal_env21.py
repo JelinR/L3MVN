@@ -158,8 +158,11 @@ class ObjectGoal_Env21(habitat.RLEnv):
         # Set info
         self.info['time'] = self.timestep
         self.info['sensor_pose'] = [0., 0., 0.]
-        self.info['goal_cat_id'] = coco_categories[obs['objectgoal'][0]]
+        self.info['goal_cat_id'] = coco_categories[obs['objectgoal'][0]]      #PersONAL : Commented out. Update is below.
         self.info['goal_name'] = category_to_id[obs['objectgoal'][0]]
+
+        #PersONAL : Update goal_cat_id, goal_name to reflect target object description
+
 
         self.goal_name = category_to_id[obs['objectgoal'][0]]
 
