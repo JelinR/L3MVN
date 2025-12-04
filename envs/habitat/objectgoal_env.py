@@ -190,7 +190,7 @@ class ObjectGoal_Env(habitat.RLEnv):
         map_obj_origin = scene_info[floor_idx]['origin']
 
         cat_counts = sem_map.sum(2).sum(1)
-        possible_cats = list(np.arange(6))
+        possible_cats = list(np.arange(6))          #TODO Doubt: Why only 6? Why not 15?
 
         for i in range(6):
             if cat_counts[i + 1] == 0:
@@ -423,7 +423,7 @@ class ObjectGoal_Env(habitat.RLEnv):
                 # print(self.scene.objects[se[i]].id) 
                 # print(self.scene.objects[se[i]].category.index()) 
                 # print(type(self.scene.objects[se[i]].category.index()) ) # int
-                semantic[semantic==se[i]] = coco_categories[self.scene.objects[se[i]].category.name()]+1
+                semantic[semantic==se[i]] = coco_categories[self.scene.objects[se[i]].category.name()]+1    #TODO Imp : COCO Category mapping
                 # print(self.scene.objects[se[i]+1].category.name())
             else :
                 semantic[

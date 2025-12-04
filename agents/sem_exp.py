@@ -385,7 +385,7 @@ class Sem_Exp_Env_Agent(ObjectGoal_Env21):
         depth = obs[:, :, 3:4]
         semantic = obs[:,:,4:5].squeeze()
         # print("obs: ", semantic.shape)
-        if args.use_gtsem:
+        if args.use_gtsem:                  #IMP : Uses simulation segmentation (16 classes). The segmentation is used to fill each class channels of sem_seg_pred.
             self.rgb_vis = rgb
             sem_seg_pred = np.zeros((rgb.shape[0], rgb.shape[1], 15 + 1))
             for i in range(16):

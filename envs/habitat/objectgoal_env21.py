@@ -65,7 +65,7 @@ class ObjectGoal_Env21(habitat.RLEnv):
         text = ''
         lines = []
         items = []
-        self.hm3d_semantic_mapping={}
+        self.hm3d_semantic_mapping={}           #IMP : Maps general MP3D categories to 40 categories
 
         with open(fileName, 'r') as f:
             text = f.read()
@@ -218,12 +218,12 @@ class ObjectGoal_Env21(habitat.RLEnv):
         se = list(set(semantic.ravel()))
         # print(se) # []
         for i in range(len(se)):
-            if self.scene.objects[se[i]].category.name() in self.hm3d_semantic_mapping:
+            if self.scene.objects[se[i]].category.name() in self.hm3d_semantic_mapping:     #IMP : Maps the general MP3D category to 40-class category
                 hm3d_category_name = self.hm3d_semantic_mapping[self.scene.objects[se[i]].category.name()]
             else:
                 hm3d_category_name = self.scene.objects[se[i]].category.name()
 
-            if hm3d_category_name in mp3d_category_id:
+            if hm3d_category_name in mp3d_category_id:          #IMP : If the category is one among the mp3d_category_id, then consider. Else, ignore.
                 # print("sum: ", np.sum(sem_output[sem_output==se[i]])/se[i])
                 semantic[semantic==se[i]] = mp3d_category_id[hm3d_category_name]-1
             else :

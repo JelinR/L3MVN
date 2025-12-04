@@ -51,7 +51,7 @@ mp3d_category_id = {
 
 # mp_categories_mapping = [4, 11, 15, 12, 19, 23, 6, 7, 15, 38, 40, 28, 29, 8, 17]
 
-mp_categories_mapping = [4, 11, 15, 12, 19, 23, 26, 24, 28, 38, 21, 16, 14, 6, 16]
+mp_categories_mapping = [4, 11, 15, 12, 19, 23, 26, 24, 28, 38, 21, 16, 14, 6, 16]  #IMP : Maps RedNet preds (the class names and ids are present in data/matterport_category_mappings.tsv) to the HM3D mapping below
 
 hm3d_category = [
         "chair",
