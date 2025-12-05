@@ -110,3 +110,42 @@ color_palette = [
     0.9218, 0.66, 0.9400000000000001,
     0.9400000000000001, 0.66, 0.8531999999999998,
     0.9400000000000001, 0.66, 0.748199999999999]
+
+
+
+#PersONAL : Added
+def load_tsv(path):
+
+    items = []
+    with open(path, 'r') as f:
+        text = f.read()
+    lines = text.split('\n')
+
+    for l in lines:
+        items.append(l.split('    '))
+
+    return items
+
+def mp_cat_to_hm3d_id(cat_name, path_map_cat_to_mp40, map_ids_mp_to_hm3d):
+
+    #Load mp_cat_mapping
+    map_cat_to_mp40 = load_tsv(path_map_cat_to_mp40)
+    
+    #Find row corresponding to the category. This is used to extract the MP3D category id
+    mp_cat_row = None
+    for row in map_cat_to_mp40:
+        if len(row) < 4: continue
+
+        if row[2] == cat_name: 
+            mp_cat_row = row
+            break
+
+    assert mp_cat_row is not None
+    
+    #Get MP3D id
+    obj_mp_id = int(mp_cat_row[-2]) + 1
+    assert obj_mp_id in map_ids_mp_to_hm3d
+
+    #Convert id from MP3D to HM3D
+    obj_hm3d_id = map_ids_mp_to_hm3d.index(obj_mp_id)
+    return obj_hm3d_id

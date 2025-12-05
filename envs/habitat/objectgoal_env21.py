@@ -12,6 +12,12 @@ from envs.utils.fmm_planner import FMMPlanner
 from constants import category_to_id, mp3d_category_id
 import envs.utils.pose as pu
 
+#PersONAL : Added
+try:
+    from constants import mp_cat_to_hm3d_id, mp_categories_mapping
+except:
+    pass
+
 coco_categories = [0, 3, 2, 4, 5, 1]
 
 class ObjectGoal_Env21(habitat.RLEnv):
@@ -61,6 +67,7 @@ class ObjectGoal_Env21(habitat.RLEnv):
         # self.scene = self._env.sim.semantic_annotations()
 
         fileName = 'data/matterport_category_mappings.tsv'
+        self.mp_cat_map_path = fileName
 
         text = ''
         lines = []
@@ -158,13 +165,19 @@ class ObjectGoal_Env21(habitat.RLEnv):
         # Set info
         self.info['time'] = self.timestep
         self.info['sensor_pose'] = [0., 0., 0.]
-        self.info['goal_cat_id'] = coco_categories[obs['objectgoal'][0]]      #PersONAL : Commented out. Update is below.
-        self.info['goal_name'] = category_to_id[obs['objectgoal'][0]]
+        # self.info['goal_cat_id'] = coco_categories[obs['objectgoal'][0]]      #PersONAL : Commented out. Update is below.
+        # self.info['goal_name'] = category_to_id[obs['objectgoal'][0]]
+        # self.goal_name = category_to_id[obs['objectgoal'][0]]
 
         #PersONAL : Update goal_cat_id, goal_name to reflect target object description
+        obj_cat, obj_descr = self.current_episode.object_category, self.current_episode.description[0]
+        self.info['goal_cat_id'] = mp_cat_to_hm3d_id(obj_cat, 
+                                                     self.mp_cat_map_path, 
+                                                     mp_categories_mapping)   #ID corresponding to HM3D categories (see constants/hm3d_category)
+        self.info['goal_name'] = obj_descr                                    #Description of object instance. Used for scoring frontiers.
 
-
-        self.goal_name = category_to_id[obs['objectgoal'][0]]
+        self.goal_name = self.info["goal_cat_id"]
+        
 
         return state, self.info
 

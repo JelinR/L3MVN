@@ -559,7 +559,7 @@ def main():
             p_input['sem_map_pred'] = local_map[e, 4:, :, :
                                                 ].argmax(0).cpu().numpy()
 
-    obs, _, done, infos = envs.plan_act_and_preprocess(planner_inputs)
+    obs, _, done, infos = envs.plan_act_and_preprocess(planner_inputs)  #IMP : Action is taken here
 
     start = time.time()
     g_reward = 0
@@ -735,7 +735,7 @@ def main():
                 ##### LLM frontier score
                 # ------------------------------------------------------------------
 
-                cn = infos[e]['goal_cat_id'] + 4
+                cn = infos[e]['goal_cat_id'] + 4            # TODO : Align PersONAL cat ids with HM3D and also update goal name in infos
                 cname = infos[e]['goal_name']               # PersONAL : Here, the goal name is the target object's description
                 frontier_score_list[e] = []
                 tpm = len(list(set(target_point_map[e].ravel()))) -1
