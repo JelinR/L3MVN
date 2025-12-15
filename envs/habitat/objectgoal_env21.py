@@ -14,7 +14,7 @@ import envs.utils.pose as pu
 
 #PersONAL : Added
 try:
-    from constants import mp_cat_to_hm3d_id, mp_categories_mapping
+    from constants import mp_cat_to_hm3d_id, mp_categories_mapping, hm3d_category
 except:
     pass
 
@@ -336,3 +336,16 @@ class ObjectGoal_Env21(habitat.RLEnv):
             curr_sim_pose, self.last_sim_location)
         self.last_sim_location = curr_sim_pose
         return dx, dy, do
+
+    #PersONAL Added
+    ###
+    def get_hab_pos(self):  
+        """Returns current habitat position of the agent."""
+        return super().habitat_env.sim.get_agent_state(0)
+
+    def get_scene_ep(self):
+        """Returns current scene and episode id."""
+        scene_id = self.current_episode.scene_id.split('/')[-1].split('.')[0]
+        episode_id = self.current_episode.episode_id
+        return scene_id, episode_id
+    ###

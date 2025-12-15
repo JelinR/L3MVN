@@ -9,7 +9,7 @@
             "name": "PersONAL Test : L3MVN",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/main_llm_vis.py",
+            "program": "${workspaceFolder}/main_llm_zeroshot_personal.py",
             "python": "/mnt/anaconda3/envs/personal_l3mvn_og/bin/python",
             // "cwd": "/mnt/L3MVN/",
             "args": [

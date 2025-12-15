@@ -35,7 +35,7 @@ from model import Semantic_Mapping, FeedforwardNet
 from envs.utils.fmm_planner import FMMPlanner
 from envs import make_vec_envs
 from arguments import get_args
-import algo
+# import algo
 
 from constants import category_to_id, hm3d_category, category_to_id_gibson
 
@@ -43,7 +43,44 @@ import envs.utils.pose as pu
 
 os.environ["OMP_NUM_THREADS"] = "1"
 
+### ADDED PERSONAL
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+from tqdm import tqdm
+
+#Get current habitat position for each env
+def get_curr_hab_pos(vec_envs):
+
+    curr_hab_pos = {}
+    for i in range(vec_envs.num_envs):
+
+        agent_state = vec_envs.venv.call_at(index = i,
+                                       function_name = "get_hab_pos")
+        curr_hab_pos[i] = agent_state.position
+
+    # print(f" Current Hab position: {agent_state.position}\n  \
+    #          Current Hab rotation: {agent_state.rotation}")
+    return curr_hab_pos
+
+def get_curr_scene_ep(vec_envs):
+
+    assert vec_envs.num_envs == 1, "Only single env supported for getting current scene and episode."
+
+    scene, episode = vec_envs.venv.call_at(index = 0,
+                                    function_name = "get_scene_ep")
+    curr_scene_ep = episode + "_" + scene
+
+    return curr_scene_ep
+
+def hab_skip_episode(vec_envs, i):
+
+    vec_envs.venv.reset_at(i)
+    return
+
+
+###
 
 
 def find_big_connect(image):
@@ -563,10 +600,25 @@ def main():
 
     start = time.time()
     g_reward = 0
+    ep_step = 0
+    pbar = tqdm(total = args.num_global_steps * args.num_local_steps)
 
     torch.set_grad_enabled(False)
     spl_per_category = defaultdict(list)
     success_per_category = defaultdict(list)
+
+    curr_scene_ep = get_curr_scene_ep(envs)
+    print(f"\nStarting Episode {curr_scene_ep}")
+
+    tmp_traj_path = os.path.join(args.log_dir, "tmp.txt")
+    os.makedirs(os.path.dirname(tmp_traj_path), exist_ok=True)
+
+    log_file_path = os.path.join(args.log_dir, f"{curr_scene_ep}.txt")
+    skip_episode = os.path.exists(log_file_path)
+    if skip_episode:
+        print(f"Skipping Episode {curr_scene_ep}. Log file already exists : {log_file_path}\n")
+        hab_skip_episode(envs, 0)
+
 
     for step in range(args.num_training_frames // args.num_processes + 1):
         if finished.sum() == args.num_processes:
@@ -575,6 +627,18 @@ def main():
         g_step = (step // args.num_local_steps) % args.num_global_steps
         l_step = step % args.num_local_steps
 
+        #PersONAL : Added
+        ###
+        if (not skip_episode):
+            curr_hab_pos = get_curr_hab_pos(envs)[0]
+
+            with open(tmp_traj_path, "a" if ep_step > 0 else "w") as f:
+                f.write(f"{ep_step}, {curr_hab_pos[0]}, {curr_hab_pos[1]}, {curr_hab_pos[2]}\n")
+
+            ep_step += 1
+            pbar.update()
+        ###
+
         # ------------------------------------------------------------------
         # Reinitialize variables when episode ends
         l_masks = torch.FloatTensor([0 if x else 1
@@ -582,7 +646,7 @@ def main():
         g_masks *= l_masks
 
         for e, x in enumerate(done):
-            if x:
+            if x or skip_episode:
                 spl = infos[e]['spl']
                 success = infos[e]['success']
                 dist = infos[e]['distance_to_goal']
@@ -597,9 +661,38 @@ def main():
    
                 wait_env[e] = 1.
                 init_map_and_pose_for_env(e)
+
+                #PersONAL : Added
+                if (not skip_episode):
+                    tmp_traj_path = os.path.join(args.log_dir, f"tmp.txt")
+                    save_traj_path = os.path.join(args.log_dir, f"{curr_scene_ep}.txt")
+                    os.rename(tmp_traj_path, save_traj_path)
+                    os.makedirs(os.path.dirname(tmp_traj_path), exist_ok=True)
+    
+                ep_step = 0
+                curr_scene_ep = get_curr_scene_ep(envs)
+                pbar = tqdm(args.num_global_steps * args.num_local_steps)
+                print(f"\nStarting Episode {curr_scene_ep}")
+
+                log_file_path = os.path.join(args.log_dir, f"{curr_scene_ep}.txt")
+                skip_episode = os.path.exists(log_file_path)
+                if skip_episode:
+                    print(f"Skipping Episode {curr_scene_ep}. Log file already exists : {log_file_path}\n")
+                    hab_skip_episode(envs, 0)
         # ------------------------------------------------------------------
 
         # ------------------------------------------------------------------
+
+        #PersONAL : Added
+        ###
+        if ep_step >= (args.num_local_steps * args.num_global_steps):
+            skip_episode = True
+            
+        if skip_episode:
+            continue
+        ###
+
+
         # Semantic Mapping Module
         poses = torch.from_numpy(np.asarray(
             [infos[env_idx]['sensor_pose'] for env_idx
@@ -932,7 +1025,7 @@ def main():
                         len(total_spl))
 
 
-            print(log)
+            # print(log)
             logging.info(log)
         # ------------------------------------------------------------------
 

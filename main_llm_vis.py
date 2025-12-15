@@ -782,7 +782,7 @@ def main():
                         pred = ff_net(query_embedding)
                         pred = nn.Softmax(dim=1)(pred)
                
-                        frontier_score_list[e].append(pred[0][hm3d_category.index(cname)].cpu().numpy()) 
+                        frontier_score_list[e].append(pred[0][hm3d_category.index(cname)].cpu().numpy())    
                       
                     else:
                         frontier_score_list[e].append(Goal_score[lay]/max(Goal_score) * 0.1 + 0.1) 
