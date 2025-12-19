@@ -9,3 +9,5 @@ habitat-sim
 data/scene_datasets
 data/objectgoal_hm3d
 logs
+envs/habitat/configs/tasks/objectnav_personal_hard.yaml
+envs/habitat/configs/tasks/objectnav_personal_medium.yaml

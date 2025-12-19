@@ -629,14 +629,14 @@ def main():
 
         #PersONAL : Added
         ###
-        if (not skip_episode):
-            curr_hab_pos = get_curr_hab_pos(envs)[0]
+        # if (not skip_episode):
+            # curr_hab_pos = get_curr_hab_pos(envs)[0]
 
-            with open(tmp_traj_path, "a" if ep_step > 0 else "w") as f:
-                f.write(f"{ep_step}, {curr_hab_pos[0]}, {curr_hab_pos[1]}, {curr_hab_pos[2]}\n")
+            # with open(tmp_traj_path, "a" if ep_step > 0 else "w") as f:
+            #     f.write(f"{ep_step}, {curr_hab_pos[0]}, {curr_hab_pos[1]}, {curr_hab_pos[2]}\n")
 
-            ep_step += 1
-            pbar.update()
+            # ep_step += 1
+            # pbar.update()
         ###
 
         # ------------------------------------------------------------------
@@ -663,15 +663,16 @@ def main():
                 init_map_and_pose_for_env(e)
 
                 #PersONAL : Added
-                if (not skip_episode):
+                if not (not x and skip_episode):
                     tmp_traj_path = os.path.join(args.log_dir, f"tmp.txt")
                     save_traj_path = os.path.join(args.log_dir, f"{curr_scene_ep}.txt")
                     os.rename(tmp_traj_path, save_traj_path)
                     os.makedirs(os.path.dirname(tmp_traj_path), exist_ok=True)
+                    print(f"Saved trajectory for {curr_scene_ep}")
     
                 ep_step = 0
                 curr_scene_ep = get_curr_scene_ep(envs)
-                pbar = tqdm(args.num_global_steps * args.num_local_steps)
+                pbar = tqdm(total = args.num_global_steps * args.num_local_steps)
                 print(f"\nStarting Episode {curr_scene_ep}")
 
                 log_file_path = os.path.join(args.log_dir, f"{curr_scene_ep}.txt")
@@ -679,6 +680,17 @@ def main():
                 if skip_episode:
                     print(f"Skipping Episode {curr_scene_ep}. Log file already exists : {log_file_path}\n")
                     hab_skip_episode(envs, 0)
+
+
+            else:
+
+                curr_hab_pos = get_curr_hab_pos(envs)[0]
+
+                with open(tmp_traj_path, "a" if ep_step > 0 else "w") as f:
+                    f.write(f"{ep_step}, {curr_hab_pos[0]}, {curr_hab_pos[1]}, {curr_hab_pos[2]}\n")
+
+                ep_step += 1
+                pbar.update()
         # ------------------------------------------------------------------
 
         # ------------------------------------------------------------------
@@ -997,13 +1009,13 @@ def main():
                     for spl in episode_spl[e]:
                         total_spl.append(spl)
 
-                if len(total_spl) > 0:
-                    log += " ObjectNav succ/spl/dtg:"
-                    log += " {:.3f}/{:.3f}/{:.3f}({:.0f}),".format(
-                        np.mean(total_success),
-                        np.mean(total_spl),
-                        np.mean(total_dist),
-                        len(total_spl))
+                # if len(total_spl) > 0:
+                #     log += " ObjectNav succ/spl/dtg:"
+                #     log += " {:.3f}/{:.3f}/{:.3f}({:.0f}),".format(
+                #         np.mean(total_success),
+                #         np.mean(total_spl),
+                #         np.mean(total_dist),
+                #         len(total_spl))
 
                 total_collision = []
                 total_exploration = []
@@ -1057,7 +1069,7 @@ def main():
                 np.mean(total_dist),
                 len(total_spl))
 
-        print(log)
+        # print(log)
         logging.info(log)
             
         # Save the spl per category
@@ -1069,7 +1081,7 @@ def main():
                                           sum(spl_per_category[key]) /
                                           len(spl_per_category[key]))
 
-        print(log)
+        # print(log)
         logging.info(log)
 
         with open('{}/{}_spl_per_cat_pred_thr.json'.format(
