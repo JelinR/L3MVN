@@ -170,6 +170,8 @@ class ObjectGoal_Env21(habitat.RLEnv):
         # self.goal_name = category_to_id[obs['objectgoal'][0]]
 
         #PersONAL : Update goal_cat_id, goal_name to reflect target object description
+        # print(self.current_episode.object_category)
+        # print(self._env.current_episode.object_category)
         obj_cat, obj_descr = self.current_episode.object_category, self.current_episode.description[0]
         self.info['goal_cat_id'] = mp_cat_to_hm3d_id(obj_cat, 
                                                      self.mp_cat_map_path, 
@@ -177,6 +179,8 @@ class ObjectGoal_Env21(habitat.RLEnv):
         self.info['goal_name'] = obj_descr                                    #Description of object instance. Used for scoring frontiers.
 
         self.goal_name = self.info["goal_cat_id"]
+
+        # print(self._env.current_episode)
         
 
         return state, self.info
@@ -231,7 +235,10 @@ class ObjectGoal_Env21(habitat.RLEnv):
         se = list(set(semantic.ravel()))
         # print(se) # []
         for i in range(len(se)):
-            if self.scene.objects[se[i]].category.name() in self.hm3d_semantic_mapping:     #IMP : Maps the general MP3D category to 40-class category
+            if se[i] >= len(self.scene.objects):
+                hm3d_category_name = "Unknown"
+            # print("\n\n-----", i, len(se), se[i], len(self.scene.objects), "\n\n")
+            elif self.scene.objects[se[i]].category.name() in self.hm3d_semantic_mapping:     #IMP : Maps the general MP3D category to 40-class category
                 hm3d_category_name = self.hm3d_semantic_mapping[self.scene.objects[se[i]].category.name()]
             else:
                 hm3d_category_name = self.scene.objects[se[i]].category.name()

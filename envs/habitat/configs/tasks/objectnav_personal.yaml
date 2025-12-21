@@ -47,4 +47,3 @@ DATASET:
   # DATA_PATH: "data/objectgoal_PersONAL/active_new/{split}/l3mvn_baseline/medium/medium.json.gz"
   # DATA_PATH: "data/objectgoal_PersONAL/active_new/{split}/l3mvn_baseline/hard/hard.json.gz"
   SCENES_DIR: "data/scene_datasets"
-

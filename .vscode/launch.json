@@ -21,7 +21,8 @@
                     "--num_eval_episodes", "2000",
                     "--load", "pretrained_models/llm_model.pt",
                     "--use_gtsem", "0",
-                    "--num_local_steps", "10"
+                    "--num_local_steps", "25",
+                    "--log_dir", "logs/easy"
                 ]
         },
     ]
